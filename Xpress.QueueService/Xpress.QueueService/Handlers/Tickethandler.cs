@@ -57,7 +57,7 @@ namespace Xpress.QueueService.Handlers
                 return ticketsBefore.Count;
             }
 
-            throw new Exception("Ticket does not exist."); // TODO: Should result in 404
+            throw new Exception("Ticket does not exist.");
         }
 
         public void Delete(Guid id)
@@ -70,12 +70,12 @@ namespace Xpress.QueueService.Handlers
         {
             if (queueType == QueueType.Deli)
             {
-                return _deliTickets.First();
+                return _deliTickets.FirstOrDefault();
             }
 
             if (queueType == QueueType.PostalService)
             {
-                return _postalServiceTickets.First();
+                return _postalServiceTickets.FirstOrDefault();
             }
 
             throw new ArgumentOutOfRangeException("Queue does not exist");

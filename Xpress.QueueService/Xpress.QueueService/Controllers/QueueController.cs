@@ -29,6 +29,12 @@ namespace Xpress.QueueService.Controllers
         {
             var ticket = _ticketHandler.GetNextTicketToServe(queueType);
             var queue = _ticketHandler.GetQueue(queueType);
+
+            if (queue.Count == 0)
+            {
+                return NoContent();
+            }
+
             return new QueueResponse
             {
                 NextTicketNumberToServe = ticket.TicketNumber,
@@ -54,6 +60,12 @@ namespace Xpress.QueueService.Controllers
         public ActionResult<TicketResponse> Get(Guid id)
         {
             var ticket = _ticketHandler.Get(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
             var ticketsBefore = _ticketHandler.GetNumberOfTicketsBefore(id);
 
             return new TicketResponse
