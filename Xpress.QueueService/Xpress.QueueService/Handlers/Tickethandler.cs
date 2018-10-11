@@ -121,9 +121,17 @@ namespace Xpress.QueueService.Handlers
             switch (queueType)
             {
                 case QueueType.Deli:
-                    return _deliTickets.Count + 1;
+                    if (_deliTickets.Count == 0)
+                    {
+                        return 1;
+                    }
+                    return _deliTickets.LastOrDefault().TicketNumber + 1;
                 case QueueType.PostalService:
-                    return _postalServiceTickets.Count + 1;
+                    if (_postalServiceTickets.Count == 0)
+                    {
+                        return 1;
+                    }
+                    return _postalServiceTickets.LastOrDefault().TicketNumber + 1;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(queueType), queueType, null);
             }
