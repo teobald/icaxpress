@@ -17,6 +17,25 @@ namespace Xpress.QueueService.Controllers
             _ticketHandler = ticketHandler;
         }
 
+        [HttpDelete, Route("ticket/{id}")]
+        public ActionResult Delete(Guid id)
+        {
+            _ticketHandler.Delete(id);
+            return Ok();
+        }
+
+        [HttpGet, Route("{queueType}")]
+        public ActionResult<QueueResponse> Get(QueueType queueType)
+        {
+            var ticket = _ticketHandler.GetNextTicketToServe(queueType);
+            var queue = _ticketHandler.GetQueue(queueType);
+            return new QueueResponse
+            {
+                NextTicketNumberToServer = ticket.TicketNumber,
+                Tickets = queue
+            };
+        }
+
         [HttpPost, Route("ticket")]
         public ActionResult<TicketResponse> Create([FromBody] CreateTicketRequest request)
         {

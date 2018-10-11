@@ -9,6 +9,9 @@ namespace Xpress.QueueService.Handlers
     {
         Ticket Create(QueueType queueType);
         Ticket Get(Guid id);
+        void Delete(Guid id);
+        Ticket GetNextTicketToServe(QueueType queueType);
+        List<Ticket> GetQueue(QueueType queueType);
     }
 
     public class TicketHandler : ITicketHandler
@@ -34,6 +37,42 @@ namespace Xpress.QueueService.Handlers
             AddTicketToQueue(queueType, ticket);
 
             return ticket;
+        }
+
+        public void Delete(Guid id)
+        {
+            var ticket = Get(id);
+            _deliTickets.Remove(ticket);
+        }
+
+        public Ticket GetNextTicketToServe(QueueType queueType)
+        {
+            if (queueType == QueueType.Deli)
+            {
+                return _deliTickets.First();
+            }
+
+            if (queueType == QueueType.PostalService)
+            {
+                return _postalServiceTickets.First();
+            }
+
+            throw new ArgumentOutOfRangeException("Queue does not exist");
+        }
+
+        public List<Ticket> GetQueue(QueueType queueType)
+        {
+            if (queueType == QueueType.Deli)
+            {
+                return _deliTickets;
+            }
+
+            if (queueType == QueueType.PostalService)
+            {
+                return _postalServiceTickets;
+            }
+
+            throw new ArgumentOutOfRangeException("Queue does not exist");
         }
 
         public Ticket Get(Guid id)
