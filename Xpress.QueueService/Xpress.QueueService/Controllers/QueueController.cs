@@ -31,7 +31,7 @@ namespace Xpress.QueueService.Controllers
             var queue = _ticketHandler.GetQueue(queueType);
             return new QueueResponse
             {
-                NextTicketNumberToServer = ticket.TicketNumber,
+                NextTicketNumberToServe = ticket.TicketNumber,
                 Tickets = queue
             };
         }
@@ -40,11 +40,13 @@ namespace Xpress.QueueService.Controllers
         public ActionResult<TicketResponse> Create([FromBody] CreateTicketRequest request)
         {
             var ticket = _ticketHandler.Create(request.QueueType);
+            var ticketsBefore = _ticketHandler.GetNumberOfTicketsBefore(ticket.Id);
             
             return new TicketResponse
             {
                 Id = ticket.Id,
-                TicketNumber = ticket.TicketNumber
+                TicketNumber = ticket.TicketNumber,
+                TicketsBefore = ticketsBefore
             };
         }
 
@@ -52,11 +54,13 @@ namespace Xpress.QueueService.Controllers
         public ActionResult<TicketResponse> Get(Guid id)
         {
             var ticket = _ticketHandler.Get(id);
+            var ticketsBefore = _ticketHandler.GetNumberOfTicketsBefore(id);
 
             return new TicketResponse
             {
                 Id = ticket.Id,
-                TicketNumber = ticket.TicketNumber
+                TicketNumber = ticket.TicketNumber,
+                TicketsBefore = ticketsBefore
             };
         }
     }

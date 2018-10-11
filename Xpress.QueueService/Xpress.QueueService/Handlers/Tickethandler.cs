@@ -12,6 +12,7 @@ namespace Xpress.QueueService.Handlers
         void Delete(Guid id);
         Ticket GetNextTicketToServe(QueueType queueType);
         List<Ticket> GetQueue(QueueType queueType);
+        int GetNumberOfTicketsBefore(Guid id);
     }
 
     public class TicketHandler : ITicketHandler
@@ -32,11 +33,31 @@ namespace Xpress.QueueService.Handlers
                 Id = Guid.NewGuid(),
                 TicketNumber = GetTicketNumber(queueType),
                 Created = DateTime.UtcNow,
+                QueueType = queueType
             };
 
             AddTicketToQueue(queueType, ticket);
 
             return ticket;
+        }
+
+        public int GetNumberOfTicketsBefore(Guid id)
+        {
+            var ticket = Get(id);
+
+            if (_deliTickets.Exists(t => t.Id == id))
+            {
+                var ticketsBefore = _deliTickets.Where(t => t.TicketNumber < ticket.TicketNumber).ToList();
+                return ticketsBefore.Count;
+            }
+
+            if (_postalServiceTickets.Exists(t => t.Id == id))
+            {
+                var ticketsBefore = _postalServiceTickets.Where(t => t.TicketNumber < ticket.TicketNumber).ToList();
+                return ticketsBefore.Count;
+            }
+
+            throw new Exception("Ticket does not exist."); // TODO: Should result in 404
         }
 
         public void Delete(Guid id)

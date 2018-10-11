@@ -8,7 +8,7 @@ namespace Xpress.QueueService.Handlers
 {
     public class QueueResponse
     {
-        public int NextTicketNumberToServer { get; set; }
+        public int NextTicketNumberToServe { get; set; }
         public IEnumerable<Ticket> Tickets { get; set; }
     }
 }

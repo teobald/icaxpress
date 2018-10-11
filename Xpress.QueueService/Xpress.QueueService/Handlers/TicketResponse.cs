@@ -6,5 +6,6 @@ namespace Xpress.QueueService.Handlers
     {
         public Guid Id { get; set; }
         public int TicketNumber { get; set; }
+        public int TicketsBefore { get; set; }
     }
 }
