@@ -34,6 +34,7 @@ namespace Xpress.QueueService
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "ICA Xpress API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();
             });
         }
 
