@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Xpress.QueueService.Handlers;
+using Xpress.QueueService.SignalR;
 
 namespace Xpress.QueueService
 {
@@ -30,6 +31,8 @@ namespace Xpress.QueueService
             services.AddSingleton<ITicketHandler, TicketHandler>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSignalR();
 
             services.AddSwaggerGen(c =>
             {
@@ -56,6 +59,11 @@ namespace Xpress.QueueService
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ICA Xpress API");
                 c.RoutePrefix = string.Empty;
+            });
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationHub>("/chatHub");
             });
 
             app.UseHttpsRedirection();
