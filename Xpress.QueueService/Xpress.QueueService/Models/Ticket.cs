@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Xpress.QueueService.Models
 {
@@ -8,6 +10,7 @@ namespace Xpress.QueueService.Models
         public Guid Id { get; set; }
         public int TicketNumber { get; set; }
         public DateTime Created { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public QueueType QueueType { get; set; }
     }
 
