@@ -1,24 +1,34 @@
 <template>
   <div>
-    <h1>{{ number }}</h1>
+    <h1>{{ queue.nextTicketNumberToServe }}</h1>
   </div>
 </template>
 
 <script>
+import queueService from "@/services/queque-service"
+
 export default {
   name: 'Queue',
   data () {
     return {
-      number: '7'
+      queue: {
+        nextTicketNumberToServe: 0,
+        tickets: []
+      }
     }
+  },
+  created() {
+    return queueService.fetchQueue("Deli")
+      .then(response => this.queue = response)
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1 {
   font-weight: bold;
+  font-size: 25em;
 }
 ul {
   list-style-type: none;
