@@ -39,6 +39,8 @@ namespace Xpress.QueueService
                 c.SwaggerDoc("v1", new Info { Title = "ICA Xpress API", Version = "v1" });
                 c.DescribeAllEnumsAsStrings();
             });
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +68,9 @@ namespace Xpress.QueueService
                 routes.MapHub<NotificationHub>("/chatHub");
             });
 
+            app.UseCors(
+                options => options.AllowAnyOrigin().AllowAnyMethod()
+            );
             app.UseHttpsRedirection();
             app.UseMvc();
         }
