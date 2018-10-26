@@ -65,7 +65,7 @@ namespace Xpress.QueueService
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<NotificationHub>("/chatHub");
+                routes.MapHub<NotificationHub>("/notificationHub");
             });
 
             app.UseCors(
