@@ -77163,7 +77163,9 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       (0, _classCallCheck2.default)(this, App);
       _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(App).call(this, props));
       _this.state = {
-        queue: {}
+        queue: 0,
+        queueType: "",
+        nextNumber: undefined
       };
       return _this;
     }
@@ -77173,9 +77175,28 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       value: function componentDidMount() {
         var _this2 = this;
 
+        this.setState(function (state) {
+          return {
+            queue: 35
+          };
+        });
+        var baseurl = "http://sec31098.ica.ia-hc.net:8088/";
         return (0, _services.getQueue)().then(function (response) {
-          _this2.queue = response;
           console.log(response);
+
+          _this2.setState(function (state) {
+            return {
+              queue: response.tickets[0].ticketNumber,
+              queueType: response.tickets[0].queueType,
+              nextNumber: response.nextTicketNumberToServe
+            };
+          });
+        }).catch(function () {
+          _this2.setState(function (state) {
+            return {
+              queue: "fail"
+            };
+          });
         });
       }
     }, {
@@ -77185,21 +77206,27 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           style: styles.container,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 40
+            lineNumber: 58
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.welcome,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 41
+            lineNumber: 59
           }
-        }, "Ditt nummer \xE4r: "), _react.default.createElement(_reactNative.Text, {
+        }, "Ditt nummer f\xF6r ", this.state.queueType, " \xE4r: "), _react.default.createElement(_reactNative.Text, {
           style: styles.instructions,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 42
+            lineNumber: 60
           }
-        }, this.queue));
+        }, this.state.queue), _react.default.createElement(_reactNative.Text, {
+          style: styles.welcome,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 61
+          }
+        }, "N\xE4sta nummer \xE4r: ", this.state.nextNumber, " "));
       }
     }]);
     return App;
@@ -77265,6 +77292,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   function getQueue() {
     return fetch(baseurl + 'api/queue/Deli', {
       method: 'GET'
+    }).then(function (response) {
+      return response.json();
     });
   }
 },386,[],"services.js");
