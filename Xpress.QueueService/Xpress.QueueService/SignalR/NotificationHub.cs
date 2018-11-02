@@ -7,12 +7,12 @@ namespace Xpress.QueueService.SignalR
     {
         public async Task SendMessage(string message)
         {
-            await Clients.All.SendAsync("newMessage", "anonymous", message);
+            await Clients.All.SendAsync("Send", "anonymous", message);
         }
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("Send", "anonymous", $"Hej {Context.ConnectionId}");
+            await Clients.All.SendAsync("Connect", "anonymous", $"Connected {Context.ConnectionId}");
         }
     }
 }

@@ -15,9 +15,9 @@ namespace XPress.QueueService.Tests
                 .WithUrl("http://localhost:8088/notificationhub")
                 .Build();
 
-            connection.On<string, string>("Send", (user, message) =>
+            connection.On<string, string>("Connect", (user, message) =>
             {
-                var hej = message;
+                var messageFromServer = message;
             });
 
             try
