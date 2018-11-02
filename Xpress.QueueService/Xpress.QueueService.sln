@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xpress.QueueService", "Xpress.QueueService\Xpress.QueueService.csproj", "{5FA9225D-1622-43A2-A3BC-C48DB9901705}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPress.QueueService.Tests", "XPress.QueueService.Tests\XPress.QueueService.Tests.csproj", "{52E96F39-F367-45C0-BA8C-B984985833A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5FA9225D-1622-43A2-A3BC-C48DB9901705}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FA9225D-1622-43A2-A3BC-C48DB9901705}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FA9225D-1622-43A2-A3BC-C48DB9901705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E96F39-F367-45C0-BA8C-B984985833A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E96F39-F367-45C0-BA8C-B984985833A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E96F39-F367-45C0-BA8C-B984985833A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E96F39-F367-45C0-BA8C-B984985833A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
