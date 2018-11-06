@@ -63,16 +63,17 @@ namespace Xpress.QueueService
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<NotificationHub>("/notificationhub");
-            });
-
             app.UseCors(
                 options => options.AllowAnyOrigin().AllowAnyMethod()
             );
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationHub>("/notificationhub");
+            });
+
         }
     }
 }
