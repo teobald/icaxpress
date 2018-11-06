@@ -18,21 +18,28 @@ import queueService from "@/services/queque-service"
 import axios from 'axios';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 
-axios
-    .get('http://sec31098.ica.ia-hc.net:8088/notificationhub')
-    .then((response) => execute(response.data));
+//axios
+//    .get('https://localhost:44381/notificationhub')
+//    .then((response) => execute(response.data));
 
 export default {
   name: 'Queue',
+
   data () {
     return {
       queue: {
         nextTicketNumberToServe: 0,
         tickets: []
-      }
+      },
+      hubConnection: new HubConnectionBuilder()
+          .withUrl('https://localhost:44381/notificationhub')
+          .build(),
     }
   },
   created() {
+    console.log(this.hubConnection);
+    this.hubConnection.on("Connected", message => { console.log('connected', message) });
+    pokerHub.on("Disconnected", message => { console.log('disconnected', message) });
     return queueService.fetchQueue("Deli")
       .then(response => this.queue = response)
   }
