@@ -1,6 +1,12 @@
 <template>
   <div>
     <h1>{{ queue.nextTicketNumberToServe }}</h1>
+    <span v-if="queue.tickets.length > 0">
+      Nästa nummer:
+      <li v-for="(value, index) in queue.tickets">
+        {{value.ticketNumber}} <span v-if="queue.tickets.length > (index+1)">,</span>
+      </li>
+    </span>
   </div>
 </template>
 
