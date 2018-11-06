@@ -1,17 +1,26 @@
 <template>
   <div>
     <h1>{{ queue.nextTicketNumberToServe }}</h1>
-    <span v-if="queue.tickets.length > 0">
+    <span v-if="queue.tickets && queue.tickets.length > 0">
       Nästa nummer:
-      <li v-for="(value, index) in queue.tickets">
+      <li v-for="(value,index) in queue.tickets" :key=index>
         {{value.ticketNumber}} <span v-if="queue.tickets.length > (index+1)">,</span>
       </li>
     </span>
+    <h2 v-if="!queue.tickets">
+    Ingen i kö
+  </h2>
   </div>
 </template>
 
 <script>
 import queueService from "@/services/queque-service"
+import axios from 'axios';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
+
+axios
+    .get('http://sec31098.ica.ia-hc.net:8088/notificationhub')
+    .then((response) => execute(response.data));
 
 export default {
   name: 'Queue',
