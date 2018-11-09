@@ -6,3 +6,15 @@ export function getQueue() {
   })
   .then(response => response.json());
 }
+
+export function getTicket() {
+  return fetch(baseurl + 'api/queue/ticket', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({queueType: "Deli"})
+  })
+  .then(response => response.json());
+}

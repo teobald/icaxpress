@@ -7,8 +7,8 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import { getQueue } from './services';
+import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import { getQueue, getTicket } from './services';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -25,13 +25,15 @@ export default class App extends Component<Props> {
       this.state = {
         queue: 0,
         queueType: "",
-        nextNumber: undefined
+        nextNumber: undefined,
+        ticketsBefore: "",
+        ticketId: ""
       }
   }
 
   componentDidMount () {
     this.setState((state) => {
-      return {queue: 35}
+      return {queue: 0}
     });
     const baseurl = "http://sec31098.ica.ia-hc.net:8088/"
     return getQueue()
@@ -40,7 +42,6 @@ export default class App extends Component<Props> {
       console.log(response);
       this.setState((state) => {
         return {
-          queue: response.tickets[0].ticketNumber,
           queueType: response.tickets[0].queueType,
           nextNumber: response.nextTicketNumberToServe
         }
@@ -48,7 +49,7 @@ export default class App extends Component<Props> {
     })
     .catch(() => {
       this.setState((state) => {
-        return {queue: "fail"}
+        return {queue: "Inget nummer"}
       });
       })
   }
@@ -59,10 +60,32 @@ export default class App extends Component<Props> {
         <Text style={styles.welcome}>Ditt nummer för {this.state.queueType} är: </Text>
         <Text style={styles.instructions}>{this.state.queue}</Text>
         <Text style={styles.welcome}>Nästa nummer är: {this.state.nextNumber} </Text>
+        <Text style={styles.welcome}>Antal nummer före dig i kön: {this.state.ticketsBefore} </Text>
+        <TouchableOpacity onPress={this.getTicket} style={styles.button}><Text style={styles.buttontext}>Deli</Text></TouchableOpacity>
       </View>
     );
   }
+
+  getTicket = () => {
+    return getTicket()
+    .then((response) => {
+      this.setState((state) => {
+        return {
+          queue: response.ticketNumber,
+          ticketsBefore: response.ticketsBefore,
+          ticketId: response.id
+        }
+        })
+      })
+    .catch(() => {
+      this.setState((state) => {
+        return {queue: "Fail"}
+      })
+    })
+  }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -82,4 +105,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 50
   },
+  button: {
+    backgroundColor: "orange",
+    width: 100,
+    height: 50
+  },
+  buttontext: {
+    color: "white",
+    textAlign: 'center',
+    fontSize: 30
+  }
 });
