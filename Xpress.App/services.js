@@ -18,3 +18,10 @@ export function getTicket() {
   })
   .then(response => response.json());
 }
+
+export function getStatus(id) {
+  return fetch(baseurl + 'api/queue/ticket/' + id, {
+    method: 'GET'
+  })
+  .then(response => response.json());
+}

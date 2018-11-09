@@ -77181,10 +77181,19 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         });
       };
 
+      _this.getStatus = function () {
+        return (0, _services.getStatus)(_this.state.ticketId).then(function (response) {
+          _this.setState(function (state) {
+            return {
+              ticketsBefore: response.ticketsBefore
+            };
+          });
+        });
+      };
+
       _this.state = {
         queue: 0,
         queueType: "",
-        nextNumber: undefined,
         ticketsBefore: "",
         ticketId: ""
       };
@@ -77201,14 +77210,13 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
             queue: 0
           };
         });
-        var baseurl = "http://sec31098.ica.ia-hc.net:8088/";
+        setInterval(this.getStatus, 10000);
         return (0, _services.getQueue)().then(function (response) {
           console.log(response);
 
           _this2.setState(function (state) {
             return {
-              queueType: response.tickets[0].queueType,
-              nextNumber: response.nextTicketNumberToServe
+              queueType: response.tickets[0].queueType
             };
           });
         }).catch(function () {
@@ -77226,44 +77234,38 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           style: styles.container,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 59
+            lineNumber: 57
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.welcome,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 60
+            lineNumber: 58
           }
         }, "Ditt nummer f\xF6r ", this.state.queueType, " \xE4r: "), _react.default.createElement(_reactNative.Text, {
           style: styles.instructions,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 61
+            lineNumber: 59
           }
         }, this.state.queue), _react.default.createElement(_reactNative.Text, {
           style: styles.welcome,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 62
-          }
-        }, "N\xE4sta nummer \xE4r: ", this.state.nextNumber, " "), _react.default.createElement(_reactNative.Text, {
-          style: styles.welcome,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 63
+            lineNumber: 60
           }
         }, "Antal nummer f\xF6re dig i k\xF6n: ", this.state.ticketsBefore, " "), _react.default.createElement(_reactNative.TouchableOpacity, {
           onPress: this.getTicket,
           style: styles.button,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 64
+            lineNumber: 61
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.buttontext,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 64
+            lineNumber: 61
           }
         }, "Deli")));
       }
@@ -77337,6 +77339,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   });
   exports.getQueue = getQueue;
   exports.getTicket = getTicket;
+  exports.getStatus = getStatus;
   var baseurl = "http://sec31098.ica.ia-hc.net:8088/";
 
   function getQueue() {
@@ -77357,6 +77360,14 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       body: JSON.stringify({
         queueType: "Deli"
       })
+    }).then(function (response) {
+      return response.json();
+    });
+  }
+
+  function getStatus(id) {
+    return fetch(baseurl + 'api/queue/ticket/' + id, {
+      method: 'GET'
     }).then(function (response) {
       return response.json();
     });

@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import { getQueue, getTicket } from './services';
+import { getQueue, getTicket, getStatus } from './services';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -25,7 +25,6 @@ export default class App extends Component<Props> {
       this.state = {
         queue: 0,
         queueType: "",
-        nextNumber: undefined,
         ticketsBefore: "",
         ticketId: ""
       }
@@ -35,15 +34,14 @@ export default class App extends Component<Props> {
     this.setState((state) => {
       return {queue: 0}
     });
-    const baseurl = "http://sec31098.ica.ia-hc.net:8088/"
+    setInterval(this.getStatus, 10000)
     return getQueue()
     .then((response) => {
       // this.state.queue = response;
       console.log(response);
       this.setState((state) => {
         return {
-          queueType: response.tickets[0].queueType,
-          nextNumber: response.nextTicketNumberToServe
+          queueType: response.tickets[0].queueType
         }
       });
     })
@@ -59,7 +57,6 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <Text style={styles.welcome}>Ditt nummer för {this.state.queueType} är: </Text>
         <Text style={styles.instructions}>{this.state.queue}</Text>
-        <Text style={styles.welcome}>Nästa nummer är: {this.state.nextNumber} </Text>
         <Text style={styles.welcome}>Antal nummer före dig i kön: {this.state.ticketsBefore} </Text>
         <TouchableOpacity onPress={this.getTicket} style={styles.button}><Text style={styles.buttontext}>Deli</Text></TouchableOpacity>
       </View>
@@ -82,6 +79,17 @@ export default class App extends Component<Props> {
         return {queue: "Fail"}
       })
     })
+  }
+
+  getStatus = () => {
+    return getStatus(this.state.ticketId)
+    .then((response) => {
+      this.setState((state) => {
+        return {
+          ticketsBefore: response.ticketsBefore
+        }
+        })
+      })
   }
 }
 
