@@ -23,28 +23,34 @@ export default class App extends Component<Props> {
   constructor (props) {
       super(props)
       this.state = {
-        queue: 0,
+        queue: "",
         queueType: "",
-        ticketsBefore: "",
-        ticketId: ""
+        ticketsBefore: 0,
+        ticketId: "",
+        drawn: false,
+        postalQueue: "",
+        postalTicketsBefore: 0,
+        postalTicketId: "",
+        firstSucess: false,
+        postalDrawn: false
       }
+
+      this.state.postal = {
+
+      }
+
+      this.getTicket = this.getTicket.bind(this);
   }
 
   componentDidMount () {
-    this.setState((state) => {
-      return {queue: 0}
-    });
     setInterval(this.getStatus, 10000)
+    setInterval(this.getStatusPostal, 9000)
     return getQueue()
     .then((response) => {
-      // this.state.queue = response;
-      console.log(response);
       this.setState((state) => {
-        return {
-          queueType: response.tickets[0].queueType
-        }
-      });
-    })
+        return {firstSucess: true}
+        });
+      })
     .catch(() => {
       this.setState((state) => {
         return {queue: "Inget nummer"}
@@ -55,24 +61,44 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Ditt nummer för {this.state.queueType} är: </Text>
-        <Text style={styles.instructions}>{this.state.queue}</Text>
-        <Text style={styles.welcome}>Antal nummer före dig i kön: {this.state.ticketsBefore} </Text>
-        <TouchableOpacity onPress={this.getTicket} style={styles.button}><Text style={styles.buttontext}>Deli</Text></TouchableOpacity>
+        <View>
+          <Text style={styles.type}>{this.state.queue && this.state.firstSucess ? "Deli" : "" }</Text>
+          <Text style={styles.instructions}>{this.state.queue}</Text>
+          <Text style={styles.welcome}>{this.state.ticketsBefore  && this.state.firstSucess ? "Antal nummer före: " + this.state.ticketsBefore : ""} </Text>
+          {!this.state.drawn && <TouchableOpacity onPress={() => this.getTicket('Deli')} style={styles.button}><Text style={styles.buttontext}>Deli</Text></TouchableOpacity>}
+        </View>
+        <View >
+          <Text style={styles.type}>{this.state.postalQueue  && this.state.firstSucess ? "Post" : "" }</Text>
+          <Text style={styles.instructions}>{this.state.postalQueue}</Text>
+          <Text style={styles.welcome}>{this.state.postalTicketsBefore  && this.state.firstSucess ? "Antal nummer före: " + this.state.postalTicketsBefore : ""} </Text>
+          {!this.state.postalDrawn && <TouchableOpacity onPress={() => this.getTicket('PostalService')} style={styles.button}><Text style={styles.buttontext}>Post</Text></TouchableOpacity>}
+        </View>
       </View>
     );
   }
 
-  getTicket = () => {
-    return getTicket()
+  getTicket = (queueType) => {
+    return getTicket(queueType)
     .then((response) => {
-      this.setState((state) => {
-        return {
-          queue: response.ticketNumber,
-          ticketsBefore: response.ticketsBefore,
-          ticketId: response.id
+      if (queueType === "Deli") {
+        this.setState((state) => {
+          return {
+            queue: response.ticketNumber,
+            ticketsBefore: response.ticketsBefore,
+            ticketId: response.id,
+            drawn: true
+          }
+          })
+        } else if (queueType === "PostalService") {
+          this.setState((state) => {
+            return {
+              postalQueue: response.ticketNumber,
+              postalTicketsBefore: response.ticketsBefore,
+              postalTicketId: response.id,
+              postalDrawn: true
+            }
+            })
         }
-        })
       })
     .catch(() => {
       this.setState((state) => {
@@ -91,16 +117,41 @@ export default class App extends Component<Props> {
         })
       })
   }
+
+  getStatusPostal = () => {
+    return getStatus(this.state.postalTicketId)
+    .then((response) => {
+      this.setState((state) => {
+        return {
+          postalTicketsBefore: response.ticketsBefore
+        }
+        })
+      })
+  }
 }
 
 
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#F5FCFF',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  deliContainer: {
+    backgroundColor: '#FF77AA',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    alignSelf: 'stretch'
+  },
+  postContainer: {
+    backgroundColor: '#229955',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch'
   },
   welcome: {
     fontSize: 20,
@@ -116,11 +167,22 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "orange",
     width: 100,
-    height: 50
+    height: 50,
+    marginTop: 15
   },
   buttontext: {
     color: "white",
     textAlign: 'center',
     fontSize: 30
+  },
+  divider: {
+    borderStyle: "solid",
+    borderBottomWidth: 2,
+    borderBottomColor: "black",
+    height: 4
+  },
+  type: {
+    fontWeight: "bold",
+    fontSize: 32
   }
 });

@@ -77141,11 +77141,13 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
   var _inherits2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[6], "@babel/runtime/helpers/inherits"));
 
-  var _react = _interopRequireWildcard(_$$_REQUIRE(_dependencyMap[7], "react"));
+  var _assertThisInitialized2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[7], "@babel/runtime/helpers/assertThisInitialized"));
 
-  var _reactNative = _$$_REQUIRE(_dependencyMap[8], "react-native");
+  var _react = _interopRequireWildcard(_$$_REQUIRE(_dependencyMap[8], "react"));
 
-  var _services = _$$_REQUIRE(_dependencyMap[9], "./services");
+  var _reactNative = _$$_REQUIRE(_dependencyMap[9], "react-native");
+
+  var _services = _$$_REQUIRE(_dependencyMap[10], "./services");
 
   var _jsxFileName = "C:\\innovation\\icaxpress\\Xpress.App\\App.js";
 
@@ -77163,15 +77165,27 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       (0, _classCallCheck2.default)(this, App);
       _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(App).call(this, props));
 
-      _this.getTicket = function () {
-        return (0, _services.getTicket)().then(function (response) {
-          _this.setState(function (state) {
-            return {
-              queue: response.ticketNumber,
-              ticketsBefore: response.ticketsBefore,
-              ticketId: response.id
-            };
-          });
+      _this.getTicket = function (queueType) {
+        return (0, _services.getTicket)(queueType).then(function (response) {
+          if (queueType === "Deli") {
+            _this.setState(function (state) {
+              return {
+                queue: response.ticketNumber,
+                ticketsBefore: response.ticketsBefore,
+                ticketId: response.id,
+                drawn: true
+              };
+            });
+          } else if (queueType === "PostalService") {
+            _this.setState(function (state) {
+              return {
+                postalQueue: response.ticketNumber,
+                postalTicketsBefore: response.ticketsBefore,
+                postalTicketId: response.id,
+                postalDrawn: true
+              };
+            });
+          }
         }).catch(function () {
           _this.setState(function (state) {
             return {
@@ -77191,12 +77205,30 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         });
       };
 
-      _this.state = {
-        queue: 0,
-        queueType: "",
-        ticketsBefore: "",
-        ticketId: ""
+      _this.getStatusPostal = function () {
+        return (0, _services.getStatus)(_this.state.postalTicketId).then(function (response) {
+          _this.setState(function (state) {
+            return {
+              postalTicketsBefore: response.ticketsBefore
+            };
+          });
+        });
       };
+
+      _this.state = {
+        queue: "",
+        queueType: "",
+        ticketsBefore: 0,
+        ticketId: "",
+        drawn: false,
+        postalQueue: "",
+        postalTicketsBefore: 0,
+        postalTicketId: "",
+        firstSucess: false,
+        postalDrawn: false
+      };
+      _this.state.postal = {};
+      _this.getTicket = _this.getTicket.bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
       return _this;
     }
 
@@ -77205,18 +77237,12 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       value: function componentDidMount() {
         var _this2 = this;
 
-        this.setState(function (state) {
-          return {
-            queue: 0
-          };
-        });
         setInterval(this.getStatus, 10000);
+        setInterval(this.getStatusPostal, 9000);
         return (0, _services.getQueue)().then(function (response) {
-          console.log(response);
-
           _this2.setState(function (state) {
             return {
-              queueType: response.tickets[0].queueType
+              firstSucess: true
             };
           });
         }).catch(function () {
@@ -77230,44 +77256,91 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     }, {
       key: "render",
       value: function render() {
+        var _this3 = this;
+
         return _react.default.createElement(_reactNative.View, {
           style: styles.container,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 57
+            lineNumber: 63
           }
-        }, _react.default.createElement(_reactNative.Text, {
-          style: styles.welcome,
+        }, _react.default.createElement(_reactNative.View, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 58
+            lineNumber: 64
           }
-        }, "Ditt nummer f\xF6r ", this.state.queueType, " \xE4r: "), _react.default.createElement(_reactNative.Text, {
+        }, _react.default.createElement(_reactNative.Text, {
+          style: styles.type,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 65
+          }
+        }, this.state.queue && this.state.firstSucess ? "Deli" : ""), _react.default.createElement(_reactNative.Text, {
           style: styles.instructions,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 59
+            lineNumber: 66
           }
         }, this.state.queue), _react.default.createElement(_reactNative.Text, {
           style: styles.welcome,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 60
+            lineNumber: 67
           }
-        }, "Antal nummer f\xF6re dig i k\xF6n: ", this.state.ticketsBefore, " "), _react.default.createElement(_reactNative.TouchableOpacity, {
-          onPress: this.getTicket,
+        }, this.state.ticketsBefore && this.state.firstSucess ? "Antal nummer före: " + this.state.ticketsBefore : "", " "), !this.state.drawn && _react.default.createElement(_reactNative.TouchableOpacity, {
+          onPress: function onPress() {
+            return _this3.getTicket('Deli');
+          },
           style: styles.button,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 61
+            lineNumber: 68
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.buttontext,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 61
+            lineNumber: 68
           }
-        }, "Deli")));
+        }, "Deli"))), _react.default.createElement(_reactNative.View, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 70
+          }
+        }, _react.default.createElement(_reactNative.Text, {
+          style: styles.type,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 71
+          }
+        }, this.state.postalQueue && this.state.firstSucess ? "Post" : ""), _react.default.createElement(_reactNative.Text, {
+          style: styles.instructions,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 72
+          }
+        }, this.state.postalQueue), _react.default.createElement(_reactNative.Text, {
+          style: styles.welcome,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 73
+          }
+        }, this.state.postalTicketsBefore && this.state.firstSucess ? "Antal nummer före: " + this.state.postalTicketsBefore : "", " "), !this.state.postalDrawn && _react.default.createElement(_reactNative.TouchableOpacity, {
+          onPress: function onPress() {
+            return _this3.getTicket('PostalService');
+          },
+          style: styles.button,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 74
+          }
+        }, _react.default.createElement(_reactNative.Text, {
+          style: styles.buttontext,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 74
+          }
+        }, "Post"))));
       }
     }]);
     return App;
@@ -77277,10 +77350,24 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
   var styles = _reactNative.StyleSheet.create({
     container: {
+      backgroundColor: '#F5FCFF',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    deliContainer: {
+      backgroundColor: '#FF77AA',
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5FCFF'
+      alignSelf: 'stretch'
+    },
+    postContainer: {
+      backgroundColor: '#229955',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch'
     },
     welcome: {
       fontSize: 20,
@@ -77296,15 +77383,26 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     button: {
       backgroundColor: "orange",
       width: 100,
-      height: 50
+      height: 50,
+      marginTop: 15
     },
     buttontext: {
       color: "white",
       textAlign: 'center',
       fontSize: 30
+    },
+    divider: {
+      borderStyle: "solid",
+      borderBottomWidth: 2,
+      borderBottomColor: "black",
+      height: 4
+    },
+    type: {
+      fontWeight: "bold",
+      fontSize: 32
     }
   });
-},384,[1,385,19,20,27,30,33,46,2,386],"App.js");
+},384,[1,385,19,20,27,30,33,29,46,2,386],"App.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   function _interopRequireWildcard(obj) {
     if (obj && obj.__esModule) {
@@ -77350,7 +77448,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     });
   }
 
-  function getTicket() {
+  function getTicket(queueType) {
     return fetch(baseurl + 'api/queue/ticket', {
       method: 'POST',
       headers: {
@@ -77358,7 +77456,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        queueType: "Deli"
+        queueType: queueType
       })
     }).then(function (response) {
       return response.json();
