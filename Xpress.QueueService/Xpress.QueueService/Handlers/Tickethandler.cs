@@ -63,7 +63,16 @@ namespace Xpress.QueueService.Handlers
         public void Delete(Guid id)
         {
             var ticket = Get(id);
-            _deliTickets.Remove(ticket);
+
+            if (_deliTickets.Exists(t => t.Id == id))
+            {
+                _deliTickets.Remove(ticket);
+            }
+
+            if (_postalServiceTickets.Exists(t => t.Id == id))
+            {
+                _postalServiceTickets.Remove(ticket);
+            }
         }
 
         public Ticket GetNextTicketToServe(QueueType queueType)
@@ -98,7 +107,17 @@ namespace Xpress.QueueService.Handlers
 
         public Ticket Get(Guid id)
         {
-            return _deliTickets.SingleOrDefault(t => t.Id == id);
+            if (_deliTickets.Exists(t => t.Id == id))
+            {
+                return _deliTickets.SingleOrDefault(t => t.Id == id);
+            }
+
+            if (_postalServiceTickets.Exists(t => t.Id == id))
+            {
+                return _postalServiceTickets.SingleOrDefault(t => t.Id == id);
+            }
+
+            return null;
         }
 
         private void AddTicketToQueue(QueueType queueType, Ticket ticket)
