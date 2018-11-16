@@ -4,7 +4,9 @@
     <span v-if="queue.tickets && queue.tickets.length > 0">
       Nästa nummer:
       <li v-for="(value,index) in queue.tickets" :key=index>
-        {{value.ticketNumber}} <span v-if="queue.tickets.length > (index+1)">,</span>
+        <span v-if="index != 0">
+          {{value.ticketNumber}} <span v-if="queue.tickets.length > (index+1)">,</span>
+        </span>
       </li>
     </span>
     <h2 v-if="!queue.tickets">
@@ -15,12 +17,7 @@
 
 <script>
 import queueService from "@/services/queque-service"
-import axios from 'axios';
-import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-
-//axios
-//    .get('https://localhost:44381/notificationhub')
-//    .then((response) => execute(response.data));
+import axios from 'axios'
 
 export default {
   name: 'Queue',
@@ -30,18 +27,21 @@ export default {
       queue: {
         nextTicketNumberToServe: 0,
         tickets: []
-      },
-      hubConnection: new HubConnectionBuilder()
-          .withUrl('https://localhost:44381/notificationhub')
-          .build(),
-    }
-  },
-  created() {
-    console.log(this.hubConnection);
-    this.hubConnection.on("Connected", message => { console.log('connected', message) });
-    pokerHub.on("Disconnected", message => { console.log('disconnected', message) });
+      }
+  }
+},
+methods: {
+  loadData: function () {
     return queueService.fetchQueue("Deli")
       .then(response => this.queue = response)
+  }
+},
+created (){
+    this.loadData();
+    console.log('poll')
+    setInterval(function () {
+      this.loadData();
+    }.bind(this), 10000 );
   }
 }
 </script>
@@ -51,6 +51,7 @@ export default {
 h1 {
   font-weight: bold;
   font-size: 25em;
+  margin:auto;
 }
 ul {
   list-style-type: none;
