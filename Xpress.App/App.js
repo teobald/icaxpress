@@ -61,13 +61,13 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View>
+        <View style={styles.deliContainer}>
           <Text style={styles.type}>{this.state.queue && this.state.firstSucess ? "Deli" : "" }</Text>
           <Text style={styles.instructions}>{this.state.queue}</Text>
           <Text style={styles.welcome}>{this.state.ticketsBefore  && this.state.firstSucess ? "Antal nummer före: " + this.state.ticketsBefore : ""} </Text>
           {!this.state.drawn && <TouchableOpacity onPress={() => this.getTicket('Deli')} style={styles.button}><Text style={styles.buttontext}>Deli</Text></TouchableOpacity>}
         </View>
-        <View >
+        <View style={styles.postContainer}>
           <Text style={styles.type}>{this.state.postalQueue  && this.state.firstSucess ? "Post" : "" }</Text>
           <Text style={styles.instructions}>{this.state.postalQueue}</Text>
           <Text style={styles.welcome}>{this.state.postalTicketsBefore  && this.state.firstSucess ? "Antal nummer före: " + this.state.postalTicketsBefore : ""} </Text>
@@ -116,6 +116,9 @@ export default class App extends Component<Props> {
         }
         })
       })
+    .catch((error) => {
+
+      })
   }
 
   getStatusPostal = () => {
@@ -127,6 +130,9 @@ export default class App extends Component<Props> {
         }
         })
       })
+    .catch((error) => {
+
+      })
   }
 }
 
@@ -135,23 +141,22 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5FCFF',
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
   deliContainer: {
     backgroundColor: '#FF77AA',
-    flex: 1,
+    alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'stretch'
+    height: "50%"
   },
   postContainer: {
     backgroundColor: '#229955',
-    flex: 1,
+    alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'stretch'
+    height: "50%"
   },
   welcome: {
     fontSize: 20,
@@ -167,8 +172,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "orange",
     width: 100,
-    height: 50,
-    marginTop: 15
+    height: 50
   },
   buttontext: {
     color: "white",
