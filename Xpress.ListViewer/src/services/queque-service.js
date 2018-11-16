@@ -6,7 +6,9 @@ const getApiClient = () => {
   if (axiosInstance) return axiosInstance;
 
   axiosInstance = axios.create({
-    baseURL: "http://sec31098.ica.ia-hc.net:8088/"
+    baseURL: "http://sec31098.ica.ia-hc.net:8088/",
+    headers: { "Content-Type": "application/json",
+               "Access-Control-Allow-Origin": "*"}
   });
 
   return axiosInstance;
@@ -30,6 +32,7 @@ function deleteTicket(id) {
 }
 
 function createTicket(ticket) {
+  console.log(ticket)
   return getApiClient()
     .post(
       '/api/queue/ticket',

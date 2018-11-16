@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Queue from '@/components/Queue'
+import Printer from '@/components/Printer'
 
 Vue.use(Router)
 

@@ -12,7 +12,7 @@ const getApiClient = () => {
   return axiosInstance;
 };
 
-function shareList(data) {
+function printTicket(data) {
   return getApiClient()
     .post(
       `PrintService/Print`,

@@ -1,6 +1,7 @@
 <template>
   <div>
-      <button v-on:click="counter += 1">Add 1</button>
+      <button class="deli-button" v-on:click="createTicket()">Deli</button>
+      <button class="post-button" v-on:click="createTicket()">Post</button>
   </div>
 </template>
 
@@ -14,43 +15,48 @@ export default {
 
   data () {
     return {
-      queue: {
-        nextTicketNumberToServe: 0,
-        tickets: []
-      }
   }
 },
 methods: {
   createTicket: function () {
-    var ticket = {
+    var ticketType = {
       "queueType": "Deli"
     }
-    return queueService.createTicket(ticket)
-      .then(response => this.queue = response)
+    return queueService.createTicket(ticketType)
+      .then(response => printTicket(response))
   },
-  printTicket: function () {
-    return queueService.fetchQueue("Deli")
-      .then(response => this.queue = response)
+  printTicket: function(ticket) {
+    console.log(ticket)
+    var _rows = [];
+    _rows.push('\u001b|3C\u001b|bC' + ticket.ticketNumber + '\n');
+    var _footerRows = [];
+
+    var data = {
+    "apiKey": "fewfew",
+    "rows": _rows,
+    "footerRows": _footerRows
+    };
+    /*return printerService.printTicket(data)
+      .then(response => this.queue = response)*/
   }
 }
 }
 </script>
 
 <style scoped>
-h1 {
-  font-weight: bold;
-  font-size: 25em;
-  margin:auto;
+.deli-button {
+    background-color: #4CAF50;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.post-button {
+    background-color: #dd4447;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 </style>
