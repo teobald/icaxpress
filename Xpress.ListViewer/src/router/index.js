@@ -10,6 +10,11 @@ export default new Router({
       path: '/',
       name: 'Queue',
       component: Queue
+    },
+    {
+      path: '/printer',
+      name: 'Printer',
+      component: Printer
     }
   ]
 })

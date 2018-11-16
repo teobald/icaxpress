@@ -33,8 +33,9 @@ function createTicket(ticket) {
   return getApiClient()
     .post(
       '/api/queue/ticket',
-      { ticket },
-    );
+      ticket,
+    )
+    .then(response => response.data);;
 }
 
 export default {
