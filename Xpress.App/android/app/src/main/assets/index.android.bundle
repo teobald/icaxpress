@@ -77357,14 +77357,16 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       alignItems: 'center'
     },
     deliContainer: {
-      backgroundColor: '#FF77AA',
+      backgroundColor: '#FCECE7',
+      color: '#EC512E',
       alignSelf: 'stretch',
       justifyContent: 'center',
       alignItems: 'center',
       height: "50%"
     },
     postContainer: {
-      backgroundColor: '#229955',
+      backgroundColor: '#EC512E',
+      color: '#FCECE7',
       alignSelf: 'stretch',
       justifyContent: 'center',
       alignItems: 'center',
@@ -77377,12 +77379,11 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     },
     instructions: {
       textAlign: 'center',
-      color: '#333333',
       marginBottom: 5,
       fontSize: 50
     },
     button: {
-      backgroundColor: "orange",
+      backgroundColor: "#3a3a3a",
       width: 100,
       height: 50
     },

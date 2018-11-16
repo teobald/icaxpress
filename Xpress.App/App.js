@@ -145,14 +145,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   deliContainer: {
-    backgroundColor: '#FF77AA',
+    backgroundColor: '#FCECE7',
+    color: '#EC512E',
     alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
     height: "50%"
   },
   postContainer: {
-    backgroundColor: '#229955',
+    backgroundColor: '#EC512E',
+    color: '#FCECE7',
     alignSelf: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
@@ -165,12 +167,11 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#333333',
     marginBottom: 5,
     fontSize: 50
   },
   button: {
-    backgroundColor: "orange",
+    backgroundColor: "#3a3a3a",
     width: 100,
     height: 50
   },
