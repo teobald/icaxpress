@@ -52,9 +52,7 @@ export default class App extends Component<Props> {
         });
       })
     .catch(() => {
-      this.setState((state) => {
-        return {queue: "Inget nummer"}
-      });
+
       })
   }
 
@@ -63,14 +61,16 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <View style={styles.deliContainer}>
           <Text style={styles.type}>{this.state.queue && this.state.firstSucess ? "Deli" : "" }</Text>
-          <Text style={styles.instructions}>{this.state.queue}</Text>
+          <Text style={styles.instructions}>{this.state.queue ? this.state.queue : ""}</Text>
           <Text style={styles.welcome}>{this.state.ticketsBefore  && this.state.firstSucess ? "Antal nummer före: " + this.state.ticketsBefore : ""} </Text>
+          <Text style={styles.welcome}>{this.state.ticketsBefore === 0 && this.state.drawn ? "Det är din tur, gå till deli-disken" : ""} </Text>
           {!this.state.drawn && <TouchableOpacity onPress={() => this.getTicket('Deli')} style={styles.button}><Text style={styles.buttontext}>Deli</Text></TouchableOpacity>}
         </View>
         <View style={styles.postContainer}>
           <Text style={styles.type}>{this.state.postalQueue  && this.state.firstSucess ? "Post" : "" }</Text>
-          <Text style={styles.instructions}>{this.state.postalQueue}</Text>
+          <Text style={styles.instructions}>{this.state.postalQueue ? this.state.postalQueue : ""}</Text>
           <Text style={styles.welcome}>{this.state.postalTicketsBefore  && this.state.firstSucess ? "Antal nummer före: " + this.state.postalTicketsBefore : ""} </Text>
+          <Text style={styles.welcome}>{this.state.postalTicketsBefore === 0 && this.state.postalDrawn ? "Det är din tur, gå till post-disken" : ""} </Text>
           {!this.state.postalDrawn && <TouchableOpacity onPress={() => this.getTicket('PostalService')} style={styles.button}><Text style={styles.buttontext}>Post</Text></TouchableOpacity>}
         </View>
       </View>
@@ -117,7 +117,12 @@ export default class App extends Component<Props> {
         })
       })
     .catch((error) => {
-
+        this.setState((state) => {
+          return {
+            drawn: false,
+            queue: 0
+          }
+          })
       })
   }
 
@@ -131,7 +136,12 @@ export default class App extends Component<Props> {
         })
       })
     .catch((error) => {
-
+        this.setState((state) => {
+          return {
+            postalDrawn: false,
+            postalQueue: 0
+          }
+          })
       })
   }
 }

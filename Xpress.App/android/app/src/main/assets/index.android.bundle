@@ -77202,7 +77202,14 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
               ticketsBefore: response.ticketsBefore
             };
           });
-        }).catch(function (error) {});
+        }).catch(function (error) {
+          _this.setState(function (state) {
+            return {
+              drawn: false,
+              queue: 0
+            };
+          });
+        });
       };
 
       _this.getStatusPostal = function () {
@@ -77212,7 +77219,14 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
               postalTicketsBefore: response.ticketsBefore
             };
           });
-        }).catch(function (error) {});
+        }).catch(function (error) {
+          _this.setState(function (state) {
+            return {
+              postalDrawn: false,
+              postalQueue: 0
+            };
+          });
+        });
       };
 
       _this.state = {
@@ -77245,13 +77259,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
               firstSucess: true
             };
           });
-        }).catch(function () {
-          _this2.setState(function (state) {
-            return {
-              queue: "Inget nummer"
-            };
-          });
-        });
+        }).catch(function () {});
       }
     }, {
       key: "render",
@@ -77262,72 +77270,84 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           style: styles.container,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 63
+            lineNumber: 61
           }
         }, _react.default.createElement(_reactNative.View, {
           style: styles.deliContainer,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 64
+            lineNumber: 62
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.type,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 65
+            lineNumber: 63
           }
         }, this.state.queue && this.state.firstSucess ? "Deli" : ""), _react.default.createElement(_reactNative.Text, {
           style: styles.instructions,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 66
+            lineNumber: 64
           }
-        }, this.state.queue), _react.default.createElement(_reactNative.Text, {
+        }, this.state.queue ? this.state.queue : ""), _react.default.createElement(_reactNative.Text, {
           style: styles.welcome,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 67
+            lineNumber: 65
           }
-        }, this.state.ticketsBefore && this.state.firstSucess ? "Antal nummer före: " + this.state.ticketsBefore : "", " "), !this.state.drawn && _react.default.createElement(_reactNative.TouchableOpacity, {
+        }, this.state.ticketsBefore && this.state.firstSucess ? "Antal nummer före: " + this.state.ticketsBefore : "", " "), _react.default.createElement(_reactNative.Text, {
+          style: styles.welcome,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 66
+          }
+        }, this.state.ticketsBefore === 0 && this.state.drawn ? "Det är din tur, gå till deli-disken" : "", " "), !this.state.drawn && _react.default.createElement(_reactNative.TouchableOpacity, {
           onPress: function onPress() {
             return _this3.getTicket('Deli');
           },
           style: styles.button,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 68
+            lineNumber: 67
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.buttontext,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 68
+            lineNumber: 67
           }
         }, "Deli"))), _react.default.createElement(_reactNative.View, {
           style: styles.postContainer,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 70
+            lineNumber: 69
           }
         }, _react.default.createElement(_reactNative.Text, {
           style: styles.type,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 71
+            lineNumber: 70
           }
         }, this.state.postalQueue && this.state.firstSucess ? "Post" : ""), _react.default.createElement(_reactNative.Text, {
           style: styles.instructions,
           __source: {
             fileName: _jsxFileName,
+            lineNumber: 71
+          }
+        }, this.state.postalQueue ? this.state.postalQueue : ""), _react.default.createElement(_reactNative.Text, {
+          style: styles.welcome,
+          __source: {
+            fileName: _jsxFileName,
             lineNumber: 72
           }
-        }, this.state.postalQueue), _react.default.createElement(_reactNative.Text, {
+        }, this.state.postalTicketsBefore && this.state.firstSucess ? "Antal nummer före: " + this.state.postalTicketsBefore : "", " "), _react.default.createElement(_reactNative.Text, {
           style: styles.welcome,
           __source: {
             fileName: _jsxFileName,
             lineNumber: 73
           }
-        }, this.state.postalTicketsBefore && this.state.firstSucess ? "Antal nummer före: " + this.state.postalTicketsBefore : "", " "), !this.state.postalDrawn && _react.default.createElement(_reactNative.TouchableOpacity, {
+        }, this.state.postalTicketsBefore === 0 && this.state.postalDrawn ? "Det är din tur, gå till post-disken" : "", " "), !this.state.postalDrawn && _react.default.createElement(_reactNative.TouchableOpacity, {
           onPress: function onPress() {
             return _this3.getTicket('PostalService');
           },
@@ -77468,7 +77488,11 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     return fetch(baseurl + 'api/queue/ticket/' + id, {
       method: 'GET'
     }).then(function (response) {
-      return response.json();
+      if (response.ok) {
+        return response.json();
+      } else {
+        return Promise.reject(response.status);
+      }
     });
   }
 },386,[],"services.js");

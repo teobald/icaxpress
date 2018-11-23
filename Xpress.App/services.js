@@ -23,5 +23,12 @@ export function getStatus(id) {
   return fetch(baseurl + 'api/queue/ticket/' + id, {
     method: 'GET'
   })
-  .then(response => response.json());
+  .then(response => {
+    if(response.ok) {
+      return response.json()
+    } else {
+      return Promise.reject(response.status)
+    }
+  })
+
 }
